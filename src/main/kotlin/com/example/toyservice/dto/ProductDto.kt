@@ -7,4 +7,7 @@ data class ProductDto (
 
     @field:NotBlank(message = "name is required")
     val name: String,
+
+    @field:NotBlank(message = "category is required")
+    val category: String,
 )

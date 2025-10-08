@@ -1,4 +1,4 @@
-package com.example.toyservice.converter
+package com.example.toyservice.converter.product
 
 import com.example.toyservice.dto.ProductDto
 import com.example.toyservice.model.Product
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component
 @Component
 class ProductToDto: Converter<Product, ProductDto> {
     override fun convert(source: Product): ProductDto? {
-        return ProductDto(source.id, source.name)
+        return ProductDto(source.id, source.name, source.category)
     }
 }
