@@ -7,6 +7,7 @@ import com.example.toyservice.model.Product
 import com.example.toyservice.model.User
 import com.example.toyservice.repository.ProductRepository
 import com.example.toyservice.repository.UserRepository
+import mu.KLogging
 import org.springframework.core.convert.ConversionService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,7 +18,11 @@ class ProductServiceImpl(
     val userRepository: UserRepository,
     val converter: ConversionService
 ): ProductService {
+
+    companion object : KLogging()
+
     override fun findByProductId(id: Long): ProductDto {
+        logger.info { "Finding product with id=$id" }
         val product = productRepository.findById(id)
 
         return if (product.isPresent) {
@@ -29,6 +34,7 @@ class ProductServiceImpl(
 
     @Transactional
     override fun addProduct(productDto: ProductDto, currentUser: User): ProductDto {
+        logger.info { "Adding product '${productDto.name}' for user ${currentUser.email}" }
         val productEntity: Product = converter.convert(productDto, Product::class.java)!!
 
         val userFromDb: User = userRepository.findByEmail(currentUser.email)
@@ -41,6 +47,8 @@ class ProductServiceImpl(
     }
 
     override fun deleteProduct(id: Long) {
+        logger.info { "Deleting product with id=$id" }
+
         if (productRepository.findById(id).isPresent) {
             productRepository.deleteById(id)
         } else {

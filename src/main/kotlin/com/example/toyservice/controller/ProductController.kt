@@ -5,6 +5,7 @@ import com.example.toyservice.model.User
 import com.example.toyservice.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import mu.KLogging
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,22 +21,26 @@ import org.springframework.web.bind.annotation.RestController
 class ProductController(
     val productService: ProductService
 ) {
+    companion object : KLogging()
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{productId}")
     fun getProduct(@PathVariable productId: Long): ProductDto {
+        logger.info { "GET /products/$productId" }
         return productService.findByProductId(productId)
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     fun addProduct(@Valid @RequestBody product: ProductDto, @AuthenticationPrincipal user: User): ProductDto {
+        logger.info { "POST /products by user ${user.id}" }
         return productService.addProduct(product, user)
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{productId}")
     fun deleteProduct(@PathVariable productId: Long){
+        logger.info { "DELETE /products/$productId" }
         productService.deleteProduct(productId)
     }
 }
